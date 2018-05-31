@@ -7,6 +7,8 @@ import {
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
+import { connect } from 'react-redux';
+
 import { Container } from '../components/Container';
 import { Logo } from '../components/Logo';
 import { InputWithButton } from '../components/TextInput';
@@ -14,35 +16,46 @@ import { ClearButton } from '../components/Buttons';
 import { LastConverted } from '../components/Text';
 import { Header } from '../components/Header';
 
-const TEMP_BASE_CURRENCY = 'USD';
-const TEMP_QUOTE_CURRENCY = 'GBP';
-const TEMP_BASE_PRICE = '100';
-const TEMP_QUOTE_PRICE = '79.74';
-const TEMP_CONVERSION_RATE = 0.7974;
-const TEMP_CONVERSION_DATE = new Date();
+import { swapCurrency, changeCurrencyAmout } from '../actions/currencies';
 
 class Home extends Component {
     handlePressBaseCurrencty = () => {
         this.props.navigation.navigate('CurrencyList', {
-            title: 'Base Currency'
+            title: 'Base Currency',
+            type: 'base'
         });
     };
 
     handlePressQuoteCurrencty = () => {
         this.props.navigation.navigate('CurrencyList', {
-            title: 'Quote Currency'
+            title: 'Quote Currency',
+            type: 'quote'
         });
     };
 
-    handleTextChange = text => {};
+    handleChangeText = amount => {
+        this.props.dispatch(changeCurrencyAmout(amount));
+    };
 
-    handleSwapCurrency = () => {};
+    handleSwapCurrency = () => {
+        this.props.dispatch(swapCurrency());
+    };
 
     handleOptionsPress = () => {
         this.props.navigation.navigate('Options');
     };
 
     render() {
+        let quotePrice;
+
+        if (this.props.isFetching) {
+            quotePrice = '...';
+        } else {
+            quotePrice = (
+                this.props.amount * this.props.conversionRate
+            ).toFixed(2);
+        }
+
         return (
             <SafeAreaView style={styles.safeView}>
                 <Container>
@@ -52,24 +65,24 @@ class Home extends Component {
                     <KeyboardAvoidingView behavior="padding">
                         <Logo />
                         <InputWithButton
-                            buttonText={TEMP_BASE_CURRENCY}
+                            buttonText={this.props.baseCurrency}
                             onPress={this.handlePressBaseCurrencty}
-                            defaultValue={TEMP_BASE_PRICE}
+                            defaultValue={this.props.amount.toString()}
                             keyboardType="numeric"
-                            onChangeText={this.handleTextChange}
+                            onChangeText={this.handleChangeText}
                         />
                         <InputWithButton
-                            buttonText={TEMP_QUOTE_CURRENCY}
+                            buttonText={this.props.quoteCurrency}
                             editable={false}
                             onPress={this.handlePressQuoteCurrencty}
-                            value={TEMP_QUOTE_PRICE}
+                            value={quotePrice}
                         />
 
                         <LastConverted
-                            base={TEMP_BASE_CURRENCY}
-                            quote={TEMP_QUOTE_CURRENCY}
-                            date={TEMP_CONVERSION_DATE}
-                            conversionRate={TEMP_CONVERSION_RATE}
+                            base={this.props.baseCurrency}
+                            quote={this.props.quoteCurrency}
+                            date={this.props.lastConvertedDate}
+                            conversionRate={this.props.conversionRate}
                         />
                         <ClearButton
                             text="Reverse Currencies"
@@ -88,4 +101,23 @@ const styles = EStyleSheet.create({
         flex: 1
     }
 });
-export default Home;
+
+const mapStateToProps = state => {
+    const baseCurrency = state.currencies.baseCurrency;
+    const quoteCurrency = state.currencies.quoteCurrency;
+    const conversionSelector = state.currencies.conversions[baseCurrency] || {};
+    const rates = conversionSelector.rates || {};
+
+    return {
+        baseCurrency,
+        quoteCurrency,
+        amount: state.currencies.amount,
+        conversionRate: rates[quoteCurrency] || 0,
+        isFetching: conversionSelector.isFetching,
+        lastConvertedDate: conversionSelector.date
+            ? new Date(conversionSelector.date)
+            : new Date()
+    };
+};
+
+export default connect(mapStateToProps)(Home);

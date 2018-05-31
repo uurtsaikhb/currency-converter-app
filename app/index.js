@@ -1,6 +1,9 @@
 import React from 'react';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
+import { Provider } from 'react-redux';
+import store from './config/store';
+
 import Home from './screens/Home';
 import CurrencyList from './screens/CurrencyList';
 import Options from './screens/Options';
@@ -22,4 +25,8 @@ EStyleSheet.build({
     // $outline: 1
 });
 
-export default Navigator;
+export default () => (
+    <Provider store={store}>
+        <Navigator />
+    </Provider>
+);

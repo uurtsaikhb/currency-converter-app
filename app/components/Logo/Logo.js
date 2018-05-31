@@ -12,8 +12,14 @@ class Logo extends Component {
     }
 
     componentDidMount() {
-        this.keyboardShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardShow);
-        this.keyboardHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardHide);
+        this.keyboardShowListener = Keyboard.addListener(
+            'keyboardWillShow',
+            this.keyboardShow
+        );
+        this.keyboardHideListener = Keyboard.addListener(
+            'keyboardWillHide',
+            this.keyboardHide
+        );
     }
 
     componentWillUnmount() {
@@ -51,7 +57,7 @@ class Logo extends Component {
                     style={imageStyle}
                     resizeMode="contain"
                 />
-                <Text style={styles.text}>CURRENTY CONVERTER</Text>
+                <Text style={styles.text}>CURRENTY love ya </Text>
             </View>
         );
     }
