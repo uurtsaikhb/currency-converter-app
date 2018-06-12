@@ -18,6 +18,7 @@ export default [
     'JPY',
     'KRW',
     'MXN',
+    'MNT',
     'MYR',
     'NOK',
     'NZD',

@@ -16,9 +16,17 @@ import { ClearButton } from '../components/Buttons';
 import { LastConverted } from '../components/Text';
 import { Header } from '../components/Header';
 
-import { swapCurrency, changeCurrencyAmout } from '../actions/currencies';
+import {
+    swapCurrency,
+    changeCurrencyAmout,
+    getInitialConversion
+} from '../actions/currencies';
 
 class Home extends Component {
+    componentWillMount() {
+        this.props.dispatch(getInitialConversion());
+    }
+
     handlePressBaseCurrencty = () => {
         this.props.navigation.navigate('CurrencyList', {
             title: 'Base Currency',
@@ -71,7 +79,7 @@ class Home extends Component {
                         <Logo />
                         <InputWithButton
                             buttonText={this.props.baseCurrency}
-                            onPress={this.handlePressBaseCurrencty}
+                            // onPress={this.handlePressBaseCurrencty}
                             defaultValue={this.props.amount.toString()}
                             keyboardType="numeric"
                             onChangeText={this.handleChangeText}
@@ -93,7 +101,7 @@ class Home extends Component {
                         />
                         <ClearButton
                             text="Reverse Currencies"
-                            onPress={this.handleSwapCurrency}
+                            // onPress={this.handleSwapCurrency}
                         />
                     </KeyboardAvoidingView>
                 </Container>
