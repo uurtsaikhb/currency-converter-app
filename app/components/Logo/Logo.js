@@ -57,7 +57,7 @@ class Logo extends Component {
                     style={imageStyle}
                     resizeMode="contain"
                 />
-                <Text style={styles.text}>CURRENTY love ya </Text>
+                <Text style={styles.text}>CURRENTY CONVERTER </Text>
             </View>
         );
     }

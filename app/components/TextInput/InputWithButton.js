@@ -14,6 +14,16 @@ const InputWithButton = props => {
         containerStyles.push(styles.containerDisabled);
     }
 
+    const buttonTextStyles = [styles.buttonText];
+    const inputStyles = [styles.input];
+    const borderStyles = [styles.border];
+
+    if (props.textColor) {
+        buttonTextStyles.push({ color: props.textColor });
+        inputStyles.push({ color: props.textColor });
+        borderStyles.push({ backgroundColor: props.textColor });
+    }
+
     return (
         <View style={containerStyles}>
             <TouchableHighlight
@@ -21,10 +31,10 @@ const InputWithButton = props => {
                 style={styles.buttonContainer}
                 underlayColor={underlayColor}
             >
-                <Text style={styles.buttonText}>{buttonText}</Text>
+                <Text style={buttonTextStyles}>{buttonText}</Text>
             </TouchableHighlight>
-            <View style={styles.border} />
-            <TextInput style={styles.input} {...props} />
+            <View style={borderStyles} />
+            <TextInput style={inputStyles} {...props} />
         </View>
     );
 };

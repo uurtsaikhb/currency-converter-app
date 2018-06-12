@@ -56,9 +56,14 @@ class Home extends Component {
             ).toFixed(2);
         }
 
+        const safeViewStyles = [styles.safeView];
+        if (this.props.primaryColor) {
+            safeViewStyles.push({ backgroundColor: this.props.primaryColor });
+        }
+
         return (
-            <SafeAreaView style={styles.safeView}>
-                <Container>
+            <SafeAreaView style={safeViewStyles}>
+                <Container backgroundColor={this.props.primaryColor}>
                     <StatusBar translucent={false} barStyle="light-content" />
                     <Header onPress={this.handleOptionsPress} />
 
@@ -70,12 +75,14 @@ class Home extends Component {
                             defaultValue={this.props.amount.toString()}
                             keyboardType="numeric"
                             onChangeText={this.handleChangeText}
+                            textColor={this.props.primaryColor}
                         />
                         <InputWithButton
                             buttonText={this.props.quoteCurrency}
                             editable={false}
                             onPress={this.handlePressQuoteCurrencty}
                             value={quotePrice}
+                            textColor={this.props.primaryColor}
                         />
 
                         <LastConverted
@@ -116,7 +123,8 @@ const mapStateToProps = state => {
         isFetching: conversionSelector.isFetching,
         lastConvertedDate: conversionSelector.date
             ? new Date(conversionSelector.date)
-            : new Date()
+            : new Date(),
+        primaryColor: state.theme.primaryColor
     };
 };
 
